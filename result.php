@@ -22,8 +22,8 @@ print_r($_FILES);
 
 print "</pre>";
 require 'vendor/autoload.php';
-#use Aws\S3\S3Client;
-#$client = S3Client::factory();
+use Aws\S3\S3Client;
+$client = S3Client::factory();
 $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
     'region'  => 'us-east-1'
@@ -32,16 +32,16 @@ $s3 = new Aws\S3\S3Client([
 
 $bucket = uniqid("php-jrh-",false);
 
-#$result = $client->createBucket(array(
-#    'Bucket' => $bucket
-#));
-# AWS PHP SDK version 3 create bucket
+$result = $client->createBucket(array(
+    'Bucket' => $bucket
+));
+#AWS PHP SDK version 3 create bucket
 $result = $s3->createBucket([
     'ACL' => 'public-read',
     'Bucket' => $bucket
 ]);
 
-#$client->waitUntilBucketExists(array('Bucket' => $bucket));
+$client->waitUntilBucketExists(array('Bucket' => $bucket));
 #Old PHP SDK version 2
 #$key = $uploadfile;
 #$result = $client->putObject(array(
@@ -52,7 +52,7 @@ $result = $s3->createBucket([
 #));
 
 # PHP version 3
-$result = $client->putObject([
+$result = $s3->putObject([
     'ACL' => 'public-read',
     'Bucket' => $bucket,
    'Key' => $uploadfile
@@ -70,22 +70,22 @@ $rds = new Aws\Rds\RdsClient([
 
 $result = $rds->describeDBInstances([
     'DBInstanceIdentifier' => 'mp1-jrh',
-    #'Filters' => [
-    #    [
-    #        'Name' => '<string>', // REQUIRED
-    #        'Values' => ['<string>', ...], // REQUIRED
-    #    ],
+    'Filters' => [
+        [
+            'Name' => '<string>', // REQUIRED
+            'Values' => ['<string>', ...], // REQUIRED
+        ],
         // ...
-   # ],
-   # 'Marker' => '<string>',
-   # 'MaxRecords' => <integer>,
+    ],
+    'Marker' => '<string>',
+    'MaxRecords' => <integer>,
 ]);
 
 
-$endpoint = $result['DBInstances']['Endpoint']['Address']
-    echo "============\n". $endpoint . "================";^M
+$endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
+    print "============\n". $endpoint . "================";
 
-//echo "begin database";^M
+//echo "begin database";
 $link = mysqli_connect($endpoint,"controller","letmein888","customerrecords") or die("Error " . mysqli_error($link));
 
 
