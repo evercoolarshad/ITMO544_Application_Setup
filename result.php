@@ -22,7 +22,7 @@ $s3 = new Aws\S3\S3Client([
    'version' => 'latest',
    'region' => 'us-east-1',
 ]);
-$bucket = uniqid("php-jrh-",false);
+$bucket = uniqid("arshads-bucket-",false);
 #$result = $client->createBucket(array(
 #   'Bucket' => $bucket
 #));
