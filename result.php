@@ -31,7 +31,7 @@ $result = $s3->createBucket([
     'ACL' => 'public-read',
     'Bucket' => $bucket
 ]);
-#$client->waitUntilBucketExists(array('Bucket' => $bucket));
+$client->waitUntilBucketExists(array('Bucket' => $bucket));
 #Old PHP SDK version 2
 #$key = $uploadfile;
 #$result = $client->putObject(array(
