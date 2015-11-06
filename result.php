@@ -16,22 +16,22 @@ echo 'Here is some more debugging info:';
 print_r($_FILES);
 print "</pre>";
 require 'vendor/autoload.php';
-#use Aws\S3\S3Client;
-#$client = S3Client::factory();
+use Aws\S3\S3Client;
+$client = S3Client::factory();
 $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
     'region'  => 'us-east-1'
 ]);
 $bucket = uniqid("php-jrh-",false);
-#$result = $client->createBucket(array(
-#    'Bucket' => $bucket
-#));
+$result = $client->createBucket(array(
+    'Bucket' => $bucket
+));
 # AWS PHP SDK version 3 create bucket
 $result = $s3->createBucket([
     'ACL' => 'public-read',
     'Bucket' => $bucket
 ]);
-#$client->waitUntilBucketExists(array('Bucket' => $bucket));
+$client->waitUntilBucketExists(array('Bucket' => $bucket));
 #Old PHP SDK version 2
 #$key = $uploadfile;
 #$result = $client->putObject(array(
