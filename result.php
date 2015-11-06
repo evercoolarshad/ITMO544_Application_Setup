@@ -67,7 +67,7 @@ $result = $rds->describeDBInstances([
 $endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
     print "============\n". $endpoint . "================";
 //echo "begin database";
-$link = mysqli_connect($endpoint,"controller","letmein888","customerrecords") or die("Error " . mysqli_error($link));
+$link = mysqli_connect($endpoint,"controller","letmein888","customerrecords",3306) or die("Error " . mysqli_error($link));
 /* check connection */
 if (mysqli_connect_errno()) {
     printf("Connect failed: %s\n", mysqli_connect_error());
