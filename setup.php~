@@ -25,7 +25,7 @@ if (mysqli_connect_errno()) {
 }
 #print "Here is the result: " . $link;
 #global $con;
-$sql = "CREATE TABLE arshadsTable
+$sql = "CREATE TABLE jgldata
 (
 ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 uname VARCHAR(20),
