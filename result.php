@@ -22,7 +22,7 @@ $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
     'region'  => 'us-east-1'
 ]);
-$bucket = uniqid("php-ars-",false);
+$bucket = uniqid("php-ars-test-bucket-",false);
 # AWS PHP SDK version 3 create bucket
 $result = $s3->createBucket([
     'ACL' => 'public-read',
