@@ -39,7 +39,7 @@ $res = $link->use_result();
 </head>
 <body>
 	<div class="container">
-		<h1 class="align-center">Jessicas Gallery</h1>
+		<h1 class="align-center">Arshad's Gallery</h1>
 		<h2 class="align-center"> 
 		<?php
 		$email = $_POST["email"];
