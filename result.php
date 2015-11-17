@@ -6,12 +6,21 @@ ob_start();
 // of $_FILES.
 require 'vendor/autoload.php';
 use Aws\S3\S3Client;
+use Aws\Sns\SnsClient;
 echo $_POST['email'];
 $uploaddir = '/tmp/';
+$SNS = new Aws\Sns\SnsClient([
+	$topic = SNS 
+]);
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 echo '<pre>';
 if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
     echo "File is valid, and was successfully uploaded.\n";
+     $result = $SNS->createTopic([
+    'Name' => 'ITMO544-MP2', // REQUIRED
+     
+]);
+
 } else {
     echo "Possible file upload attack!\n";
 }
