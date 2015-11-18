@@ -11,6 +11,11 @@ echo $_POST['email'];
 $uploaddir = '/tmp/';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 echo '<pre>';
+$sns = new AmazonSNS();
+$createTopic = $sns->create_topic('MP2-SNS-TEST');
+print '<pre>';
+print_r($create_topic);
+print '<pre>';
 if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
     echo "File is valid, and was successfully uploaded.\n";
 
