@@ -7,12 +7,8 @@ ob_start();
 require 'vendor/autoload.php';
 use Aws\S3\S3Client;
 use Aws\Sns\SnsClient;
-$sns = new AmazonSNS();
-$createTopic = $sns -> create_topic('MP2-SNS-Service');
-print '<pre>';
-print_r($createTopic);
-print '<pre>';
 echo $_POST['email'];
+echo $_POST['phone'];
 $uploaddir = '/tmp/';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 echo '<pre>';
@@ -87,6 +83,29 @@ echo "Result set order...\n";
 while ($row = $res->fetch_assoc()) {
     echo $row['ID'] . " " . $row['email']. " " . $row['phone'];
 }
+$sns = new Aws\Sns\SnsClient([
+'version' => 'latest',
+'region' => 'us-east-1'
+]);
+
+$result = $sns->createTopic([
+'Name'=>'My-New-SNS-topic',
+]);
+
+$topicArn = $result['TopicArn'];
+echo "Topic ARN is ::: $topicArn";
+
+$result = $sns->setTopicAttributes([
+'AttributeName'=>'DisplayName',
+'AttributeValue'=>'MP2-SNS-TOPIC',
+'TopicArn'=>$topicArn,
+]);
+
+$result = $sns->subscribe([
+'Endpoint'=>$email,
+'Protocol'=>'email',
+'TopicArn'=>$topicArn,
+]);
 
 $link->close();
 
