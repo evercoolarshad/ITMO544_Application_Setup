@@ -1,76 +1,68 @@
+<html>
+<head><title>Gallery</title>
+</head>
+<h1>Welcome to Arshad's gallery</h1>
+<!-- // reference -http://fotorama.io/set-up/ -->
+<!-- 1. Link to jQuery (1.8 or later), -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> <!-- 33 KB -->
+
+<!-- fotorama.css & fotorama.js. -->
+<link  href="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet"> <!-- 3 KB -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script> <!-- 16 KB -->
+
+<!-- 2. Add images to <div class="fotorama"></div>. -->
+<div class="fotorama">
+
+<!-- 3. Enjoy! -->
+
+<body>
+
+ 
 <?php
 session_start();
+$email = $_POST["email"];
+echo $email;
 require 'vendor/autoload.php';
-# Creating a client for the s3 bucket
+ 
 use Aws\Rds\RdsClient;
 $client = new Aws\Rds\RdsClient([
- 'version' => 'latest',
- 'region'  => 'us-east-1'
+'region'  => 'us-east-1',
+'version'=>'latest',
 ]);
-$result = $client->describeDBInstances([
+ 
+$result = $client->describeDBInstances(array(
     'DBInstanceIdentifier' => 'mp1-db',
-]);
-$endpoint = "";
-$endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
-# Connecting to the database
-$link = mysqli_connect($endpoint,"controller","letmein888","customerrecords") or die("Error " . mysqli_error($link));
-/* Checking the database connection */
+));
+ 
+$endpoint = $result['DBInstances'][0]['Endpoint']['Address'];;
+ 
+//echo "begin database";
+$link = mysqli_connect($endpoint,"controller","letmein888","customerrecords",3306) or die("Error " . mysqli_error($link));
+ 
+/* check connection */
 if (mysqli_connect_errno()) {
     printf("Connect failed: %s\n", mysqli_connect_error());
     exit();
 }
-# Selecting everything that the database with the name jgldata contains
-#$link->real_query("SELECT * FROM arshadsTable WHERE email = '$email'");
+//below line is unsafe - $email is not checked for SQL injection -- don't do this in real life or use an ORM instead
+//$link->real_query("SELECT * FROM arshadsTable WHERE email = '$email'");
 $link->real_query("SELECT * FROM arshadsTable");
 $res = $link->use_result();
+echo "Result set order...\n";
+while ($row = $res->fetch_assoc()) {
+    echo "<img src =\" " . $row['s3rawurl'] . "\" /><img src =\"" .$row['s3finishedurl'] . "\"/>";
+echo $row['id'] . "Email: " . $row['email'];
+}
+
+echo "successfully executed";
+$link->close();
 ?>
 
 
-<!DOCTYPE html>
-<html lang="de">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	<title>Gallery</title>
-	<link href='http://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
-	<link href='../dist/simplelightbox.min.css' rel='stylesheet' type='text/css'>
-	<link href='demo.css' rel='stylesheet' type='text/css'>
-</head>
-<body>
-	<div class="container">
-		<h1 class="align-center">Arshad's Gallery</h1>
-		<h2 class="align-center"> 
-		<?php
-		$email = $_POST["email"];
-		echo $email;
-		?>
-		</h2>
-
-
-		<div class="gallery">	
-			<?php
-               
-               		while ($row = $res->fetch_assoc()) 
-               		{
-               		echo '<a href="'. $row['s3rawurl'] .'" title="'. $row['filename'] .'" data-gallery ><img src="' . $row['s3rawurl'] . '" width="100" height="100" ></a>';  
-                  	}
-               		$link->close();
-                         
-              		?>			
-			
-									
-		</div>
-	
-		<br><br>
-			
-	
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script type="text/javascript" src="../dist/simple-lightbox.js"></script>
-<script>
-	$(function(){
-		var gallery = $('.gallery a').simpleLightbox();
-	});
-</script>
+</div>
 </body>
-</html>	
+</html>
+
+
+
+
