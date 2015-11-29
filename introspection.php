@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 require 'vendor/autoload.php';
 
 # Creating a client for the s3 bucket
@@ -14,7 +13,6 @@ $result = $client->describeDBInstances([
     'DBInstanceIdentifier' => 'mp1-db',
 ]);
 
-$endpoint = "";
 $endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
 
 # Connecting to the database
@@ -27,27 +25,27 @@ if (mysqli_connect_errno()) {
 }
 
 $uploaddir = '/tmp/';
+$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 
-$backup = uniqid("dbname",false);
+$backup = uniqid("dbBackup",false);
 
-$bkFile=$uploaddir.$backup. '.' . 'sql';
+$backupfile=$uploaddir.$backup. '.' . 'sql';
 
-echo $bkFile;
-
-$dbusername="controller";
+$dbuser="controller";
 $dbpass="letmein888";
+echo $dbuser;
+echo $dbpass;
 
-$dumpCommand="mysqldump --user=$dbusername --password=$dbpass --host=$endpoint customerrecords > $bkFile";
-echo $dumpCommand;
-
-exec($dumpCommand);
+$sqlcommand="mysqldump --user=$dbuser --password=$dbpass --host=$endpoint customerrecords > $backupfile";
+echo $sqlcommand;
+exec($sqlcommand);
 
 $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
     'region'  => 'us-east-1'
 ]);
 
-$bucket = uniqid("backup",false);
+$bucket = uniqid("database-backup-",false);
 
 # AWS PHP SDK version 3 create bucket
 $result = $s3->createBucket([
@@ -61,14 +59,13 @@ $s3->waitUntil('BucketExists', array( 'Bucket'=> $bucket));
 $result = $s3->putObject([
     'ACL' => 'public-read',
     'Bucket' => $bucket,
-    'Key' => $bkFile,
-    'SourceFile' => $bkFile,
-]);
+    'Key' => $backupfile,
+    'SourceFile' => $backupfile,
+]);  
 
-echo "Successully backed up the database and stored in the S3 Bucket!";
+$sqlurl = $result['ObjectURL'];
+echo $sqlurl;
 
+echo "Database backup created successfully and stored in the s3 bucket.";
 ?>
-
-
-
 
