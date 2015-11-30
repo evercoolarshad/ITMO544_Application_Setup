@@ -11,7 +11,7 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script> <!-- 16 KB -->
 
 <!-- 2. Add images to <div class="fotorama"></div>. -->
-<div class="fotorama">
+<div class="fotorama" data-width= "1200" data-ratio="1200/467" data-max-width="100%">
 
 <!-- 3. Enjoy! -->
 
