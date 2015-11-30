@@ -53,7 +53,7 @@ $result = $s3->getObject(array(
 ));
 
 $image= new Imagick(glob('/tmp/originalimage.jpg'));
-$image-> thumbnailImage(50,0);//Distorts the image
+$image-> charcoalImage(5,1);//Charcoal image
 $image->setImageFormat ("jpg");
 $image-> writeImages('/tmp/modifiedimage.jpg',true);
 
@@ -88,7 +88,6 @@ $expiration= $s3 -> putBucketLifecycleConfiguration([
 			],
 		],
 	  ],
-			
 ]);
 
 $expiration= $s3 -> putBucketLifecycleConfiguration([
@@ -104,7 +103,6 @@ $expiration= $s3 -> putBucketLifecycleConfiguration([
 			],
 		],
 	  ],
-			
 ]);
 
 
