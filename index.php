@@ -65,7 +65,7 @@ form h4{
 <label class="labelOne" for="email">
 Enter Email of user: <input type="email" name="email"></label><br />
 <label for="phone">
-Enter Phone of user (1-XXX-XXX-XXXX): <input type="phone" name="phone"></label>
+Enter Phone of user (1XXXXXXXXXX): <input type="phone" name="phone"></label>
 	</fieldset>
 
 <input type="submit" value="Send File" />
@@ -76,6 +76,8 @@ Enter Phone of user (1-XXX-XXX-XXXX): <input type="phone" name="phone"></label>
 <label for="email">    
 Enter Email of user for gallery to browse: <input type="email" name="email"></label>
 <input type="submit" value="Load Gallery" />
+
+<a href="introspection.php">Click here to backup the database</a>
 </form>
 </div>
 
