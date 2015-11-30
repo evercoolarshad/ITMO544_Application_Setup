@@ -61,6 +61,22 @@ $result = $s3->putObject([
     'Bucket' => $bucket,
     'Key' => $backupfile,
     'SourceFile' => $backupfile,
+]);
+
+$expiration= $s3 -> putBucketLifecycleConfiguration([
+	 'Bucket' => $bucket,
+    	 'LifecycleConfiguration'  => [
+		'Rules' => [
+		  [
+			'Expiration'=> [
+				'Date' => '2015-12-25',
+				],
+				'Prefix' => ' ',
+				'Status' => 'Enabled',
+			],
+		],
+	  ],
+			
 ]);  
 
 $sqlurl = $result['ObjectURL'];
