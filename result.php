@@ -71,10 +71,43 @@ $resultrendered = $s3->putObject([
     'ContentType' => $_FILES['userfile']['tmp_name'],
     'Body'   => fopen("/tmp/modifiedimage.jpg", 'r+')
 ]);  
-//Eliminate the variable s3rendered locally
 unlink('/tmp/modifiedimage.jpg');
 $finishedurl = $resultrendered['ObjectURL'];
 echo $finishedurl;
+
+$expiration= $s3 -> putBucketLifecycleConfiguration([
+	 'Bucket' => $bucket,
+    	 'LifecycleConfiguration'  => [
+		'Rules' => [
+		  [
+			'Expiration'=> [
+				'Date' => '2015-12-25',
+				],
+				'Prefix' => ' ',
+				'Status' => 'Enabled',
+			],
+		],
+	  ],
+			
+]);
+
+$expiration= $s3 -> putBucketLifecycleConfiguration([
+	 'Bucket' => $modifiedbucket,
+    	 'LifecycleConfiguration'  => [
+		'Rules' => [
+		  [
+			'Expiration'=> [
+				'Date' => '2015-12-25',
+				],
+				'Prefix' => ' ',
+				'Status' => 'Enabled',
+			],
+		],
+	  ],
+			
+]);
+
+
 
 
 
