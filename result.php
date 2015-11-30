@@ -44,14 +44,16 @@ $url = $result['ObjectURL'];
 echo $url;
 
 
+
 $result = $s3->getObject(array(
     'Bucket' => $bucket,
     'Key' => "Hello".$uploadfile,
     'ContentType' => $_FILES['userfile']['tmp_name'],
     'SaveAs' => '/tmp/originalimage.jpg'
 ));
+
 $image= new Imagick(glob('/tmp/originalimage.jpg'));
-$image-> thumbnailImage(50,0);
+$image-> thumbnailImage(50,0);//Distorts the image
 $image->setImageFormat ("jpg");
 $image-> writeImages('/tmp/modifiedimage.jpg',true);
 
@@ -69,7 +71,8 @@ $resultrendered = $s3->putObject([
     'ContentType' => $_FILES['userfile']['tmp_name'],
     'Body'   => fopen("/tmp/modifiedimage.jpg", 'r+')
 ]);  
-unlink('imagesResult/modifiedimage.jpg');
+//Eliminate the variable s3rendered locally
+unlink('/tmp/modifiedimage.jpg');
 $finishedurl = $resultrendered['ObjectURL'];
 echo $finishedurl;
 
@@ -138,6 +141,12 @@ $result = $sns->subscribe([
 'Endpoint'=>$email,
 'Protocol'=>'email',
 'TopicArn'=>$topicArn,
+]);
+
+$result = $sns->publish([
+'TopicArn' => $topicArn,
+'Subject' => 'Image uploaded',
+'Message' => 'Congratulations! Your image has been successfully uploaded',
 ]);
 
 
