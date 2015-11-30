@@ -42,6 +42,39 @@ $result = $s3->putObject([
 ]);  
 $url = $result['ObjectURL'];
 echo $url;
+
+
+$result = $s3->getObject(array(
+    'Bucket' => $bucket,
+    'Key' => "Hello".$uploadfile,
+    'ContentType' => $_FILES['userfile']['tmp_name'],
+    'SaveAs' => '/tmp/originalimage.jpg'
+));
+$image= new Imagick(glob('/tmp/originalimage.jpg'));
+$image-> thumbnailImage(50,0);
+$image->setImageFormat ("jpg");
+$image-> writeImages('/tmp/modifiedimage.jpg',true);
+
+$modifiedbucket = uniqid("modified-image-",false);
+
+$result = $s3->createBucket([
+'ACL' => 'public-read',
+'Bucket' => $modifiedbucket,
+]);
+$resultrendered = $s3->putObject([
+    'ACL' => 'public-read',
+    'Bucket' => $modifiedbucket,
+    'Key' => "Hello".$uploadfile,
+    'SourceFile' => "/tmp/modifiedimage.jpg",
+    'ContentType' => $_FILES['userfile']['tmp_name'],
+    'Body'   => fopen("/tmp/modifiedimage.jpg", 'r+')
+]);  
+unlink('imagesResult/modifiedimage.jpg');
+$finishedurl = $resultrendered['ObjectURL'];
+echo $finishedurl;
+
+
+
 $rds = new Aws\Rds\RdsClient([
     'version' => 'latest',
     'region'  => 'us-east-1'
@@ -67,7 +100,7 @@ $email = $_POST['email'];
 $phone = $_POST['phone'];
 $s3rawurl = $url; 
 $filename = basename($_FILES['userfile']['name']);
-$s3finishedurl = "none";
+$s3finishedurl = $finishedurl;
 $status =0;
 $date='2015-11-10 12:00:00';
 $stmt->bind_param("sssssii",$email,$phone,$filename,$s3rawurl,$s3finishedurl,$state,$date);
@@ -107,13 +140,10 @@ $result = $sns->subscribe([
 'TopicArn'=>$topicArn,
 ]);
 
+
 $link->close();
 
 header('Location: gallery.php');
 exit;
 
-//add code to detect if subscribed to SNS topic 
-//if not subscribed then subscribe the user and UPDATE the column in the database with a new value 0 to 1 so that then each time you don't have to resubscribe them
-// add code to generate SQS Message with a value of the ID returned from the most recent inserted piece of work
-//  Add code to update database to UPDATE status column to 1 (in progress)
 ?>
