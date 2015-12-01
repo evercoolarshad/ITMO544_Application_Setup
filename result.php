@@ -53,7 +53,7 @@ $result = $s3->getObject(array(
 ));
 
 $image= new Imagick(glob('/tmp/originalimage.jpg'));
-$image-> charcoalImage(5,1);//Charcoal image
+$image-> oilPaintImage(2);//Oilpaint image
 $image->setImageFormat ("jpg");
 $image-> writeImages('/tmp/modifiedimage.jpg',true);
 
@@ -173,7 +173,7 @@ $result = $sns->subscribe([
 'Protocol'=>'email',
 'TopicArn'=>$topicArn,
 ]);
-
+sleep(30);//=======================sleep for 30 seconds so that the user can subscribe==================
 $result = $sns->publish([
 'TopicArn' => $topicArn,
 'Subject' => 'Image uploaded',
