@@ -49,6 +49,11 @@ form h4{
 	
 	}
 </style>
+<script>
+function showAlert(){
+alert('Thanks for submitting the image. Please check your email and subscribe to the SNS topic while the page loads for 30 seconds');
+}
+</script>
 </head>
 <body>
 
@@ -68,7 +73,7 @@ Enter Email of user: <input type="email" name="email"></label><br />
 Enter Phone of user (1XXXXXXXXXX): <input type="phone" name="phone"></label>
 	</fieldset>
 
-<input type="submit" value="Send File" />
+<input type="submit" value="Send File" onclick="showAlert();"/>
 </form>
 <hr />
 <!-- The data encoding type, enctype, MUST be specified as below -->
