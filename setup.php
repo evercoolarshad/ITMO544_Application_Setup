@@ -38,5 +38,5 @@ state TINYINT(3)CHECK(state IN(0,1,2)),
 date TIMESTAMP 
 )";
 $link->query($sql);
-chmod("setup-lite.php", 600);
+chmod("setup.php", 600);
 ?>
